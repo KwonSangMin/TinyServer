@@ -22,6 +22,8 @@
  {
     int server_fd, client_fd;
     struct sockaddr_in host_addr, client_addr;
+    memset(&host_addr,0,sizeof(host_addr));//sockaddr_in 구조체의 경우 sockaddr과 동일한 크기를 갖기위해서 끝에 0으로된 패딩이 필요하다. 이를 위해서 미리 0으로 값을 설정해준다.
+    memset(&client_addr,0,sizeof(client_addr));
     socklent_t size;
     char buffer[BUF_SIZE];
     server_fd=socket(PF_INET,SOCK_STREAM,0);

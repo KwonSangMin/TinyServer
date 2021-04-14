@@ -5,11 +5,15 @@
 #include <iostream>
 #include <thread>
 using namespace std;
+char MessageBuffer[1024];
+void write(int);
+void read();
 int main()
 {
         struct sockaddr_in server_addr, client_addr;
         int server_fd, client_fd;
         memset(&server_addr,0,sizeof(server_addr));
+        server_fd=socket(AF_INET,SOCK_STREAM,0);
         server_addr.sin_family=AF_INET;
         server_addr.sin_port=htons(2802);
         server_addr.sin_addr.s_addr=htonl(INADDR_ANY);
@@ -25,9 +29,9 @@ int main()
         }
         char buffer[1024];
         auto size=sizeof(client_addr);
-        printf("Server :: Wating For Connecting With Port = %d\n",2802);
         while(1)
         {
+                printf("Server :: Wating For Connecting With Port = %d\n",2802);
                 client_fd=accept(server_fd,(struct sockaddr *)&client_addr,(socklen_t*)&size);
                 if(client_fd<0)
                 {
@@ -36,8 +40,17 @@ int main()
                 }
                 inet_ntop(AF_INET,&client_addr.sin_addr.s_addr,buffer, 1024);
                 printf("Server :: Now %s Client Connected \n",buffer);
-
+                thread A(write,client_fd);
+                A.join();
         }
         return 0;
 }
-~
+void write(int client_fd)
+{
+        int recv_length=0;
+        char M_L_C[5];
+        recv(client_fd,M_L_C,5,0);
+        printf("Server :: Client_Message_Length = %d\n",M_L_C);
+        //while(recv_length<)
+
+}

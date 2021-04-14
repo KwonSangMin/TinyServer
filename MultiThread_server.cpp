@@ -41,16 +41,26 @@ int main()
                 inet_ntop(AF_INET,&client_addr.sin_addr.s_addr,buffer, 1024);
                 printf("Server :: Now %s Client Connected \n",buffer);
                 thread A(write,client_fd);
-                A.join();
+                A.detach();
         }
         return 0;
 }
 void write(int client_fd)
 {
         int recv_length=0;
-        char M_L_C[5];
-        recv(client_fd,M_L_C,5,0);
+        char buffer[1024];
+        int M_L_C;
+        memset(&buffer,0,1024);
+        while(recv_length<4){recv_length+=recv(client_fd,&buffer,4,0);}
+        M_L_C=*(int*)buffer;
         printf("Server :: Client_Message_Length = %d\n",M_L_C);
+        recv_length=0;
+        memset(&buffer,0,1024);
+        while(recv_length<M_L_C)
+        {
+                recv_length+=recv(client_fd,&buffer,M_L_C,0);
+        }
+        printf("Server :: Client_Message -> %s\n",buffer);
+        send(client_fd,"We Recieved Your Message\n",30,0);
         //while(recv_length<)
-
 }

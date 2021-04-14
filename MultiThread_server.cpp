@@ -62,5 +62,4 @@ void write(int client_fd)
         }
         printf("Server :: Client_Message -> %s\n",buffer);
         send(client_fd,"We Recieved Your Message\n",30,0);
-        //while(recv_length<)
 }
